@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import siteData from 'island:site-data';
+import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 
 function renderInBrowser() {
@@ -10,7 +11,11 @@ function renderInBrowser() {
 
   console.log(siteData);
 
-  createRoot(containerEl).render(<App />);
+  createRoot(containerEl).render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
 }
 
 renderInBrowser();
