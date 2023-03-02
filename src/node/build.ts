@@ -2,13 +2,14 @@ import { join } from 'path';
 import { build as viteBuild, InlineConfig} from 'vite'
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants/index';
 import { RollupOutput } from 'rollup'
-import * as fs from 'fs-extra'
+import fs from 'fs-extra'
+import { pathToFileURL } from 'url';
 
 export async function build(root: string = process.cwd()) {
   const [clientBundle, serverBundle] = await bundle(root)
 
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js')
-  const { render } = require(serverEntryPath)
+  const { render } = (await import(serverEntryPath))
 
   await renderPage(render, root, clientBundle)
 }
