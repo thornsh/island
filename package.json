@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsup --watch",
     "build": "tsup",
-    "test:init": "vitest run",
+    "test:unit": "vitest run",
     "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./"
   },
   "bin": {
@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@loadable/component": "^5.15.3",
     "@playwright/test": "1.26.1",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.14.0",
@@ -39,6 +40,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^3.1.0",
     "cac": "^6.7.14",
+    "fast-glob": "^3.2.12",
     "fs-extra": "^11.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
