@@ -10,3 +10,12 @@ declare module 'island:routes' {
   const routes: Route[];
   export { routes };
 }
+
+declare module '*.module.scss' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
+declare module '@runtime' {
+  export * from 'runtime';
+}
