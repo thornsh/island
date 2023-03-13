@@ -84,7 +84,7 @@ export async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      const { appHtml, islandToPathMap, propsData } = await render(routePath);
+      const { appHtml, islandToPathMap, islandProps } = await render(routePath);
 
       const styleAssets = clientBundle.output.filter(
         (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
@@ -106,17 +106,17 @@ export async function renderPages(
   <body>
     <div id="root">${appHtml}</div>
     <script type="importmap">
-      {
-        "imports": {
-          ${EXTERNALS.map(
-            (name) => `"${name}": "/${normalizeVendorFilename(name)}"`
-          ).join(',')}
-        }
-      }
-    </script>
+  {
+    "imports": {
+      ${EXTERNALS.map(
+        (name) => `"${name}": "/${normalizeVendorFilename(name)}"`
+      ).join(',')}
+    }
+  }
+</script>
     <script type="module">${islandsCode}</script>
     <script type="module" src="/${clientChunk?.fileName}"></script>
-    <script id="island-props">${JSON.stringify(propsData)}</script>
+    <script id="island-props">${JSON.stringify(islandProps)}</script>
   </body>
 </html>`.trim();
       const fileName = routePath.endsWith('/')

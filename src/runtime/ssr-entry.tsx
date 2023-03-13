@@ -5,7 +5,7 @@ import { DataContext } from './hooks';
 
 export interface RenderResult {
   appHtml: string;
-  propsData: unknown[];
+  islandProps: unknown[];
   islandToPathMap: Record<string, string>;
 }
 
@@ -13,10 +13,7 @@ export interface RenderResult {
 export async function render(pagePath: string) {
   const pageData = await initPageData(pagePath);
   const { clearIslandData, data } = await import('./jsx-runtime');
-  const { islandProps, islandToPathMap } = data;
-  console.log(islandProps, islandToPathMap, '=======');
   clearIslandData();
-
   const appHtml = renderToString(
     <DataContext.Provider value={pageData}>
       <StaticRouter location={pagePath}>
@@ -24,9 +21,11 @@ export async function render(pagePath: string) {
       </StaticRouter>
     </DataContext.Provider>
   );
+  // 解构语句
+  const { islandProps, islandToPathMap } = data;
   return {
     appHtml,
-    propsData: islandProps,
+    islandProps,
     islandToPathMap
   };
 }
