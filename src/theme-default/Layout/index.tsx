@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Content } from '../../runtime/Content';
 import 'uno.css';
 import { usePageData } from '../../runtime';
 import '../styles/base.css';
 import '../styles/vars.css';
-import { Nav } from '../components/Nav/index';
+import { Nav } from '../components/Nav';
 import { HomeLayout } from './HomeLayout/index';
 import { DocLayout } from './DocLayout';
 import '../styles/doc.css';
@@ -28,7 +25,7 @@ export function Layout() {
 
   return (
     <div>
-      <Nav />
+      <Nav></Nav>
       <section style={{ paddingTop: 'var(--island-nav-height)' }}>
         {getContent()}
       </section>

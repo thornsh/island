@@ -21,3 +21,7 @@ declare module 'island:routes' {
 declare module '@runtime' {
   export * from 'runtime';
 }
+
+export type PropsWithIsland = {
+  __island?: boolean;
+};

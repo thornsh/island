@@ -8,7 +8,8 @@
     "start": "tsup --watch",
     "build": "tsup",
     "test:unit": "vitest run",
-    "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./"
+    "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./",
+    "build:deps": "tsx ./scripts/prebundle.ts"
   },
   "bin": {
     "island": "bin/island.js"
@@ -27,6 +28,7 @@
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/resolve": "^1.20.2",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",
@@ -44,10 +46,15 @@
     "vitest": "^0.29.2"
   },
   "dependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/helper-plugin-utils": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/traverse": "^7.21.2",
     "@mdx-js/rollup": "2.1.3",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react": "2.2.0",
     "acorn": "^8.8.2",
     "cac": "^6.7.14",
+    "esbuild": "^0.17.11",
     "fast-glob": "^3.2.12",
     "fs-extra": "^11.1.0",
     "github-slugger": "^2.0.0",
@@ -65,11 +72,13 @@
     "remark-mdx-frontmatter": "^2.1.1",
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
+    "resolve": "^1.22.1",
     "rollup": "^3.17.3",
     "shiki": "^0.14.1",
     "sirv": "^2.0.2",
+    "tsx": "^3.12.5",
     "unified": "^10.1.2",
     "unocss": "^0.50.4",
-    "vite": "^4.1.4"
+    "vite": "3.1.4"
   }
 }

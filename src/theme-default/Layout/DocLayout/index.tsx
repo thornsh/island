@@ -5,6 +5,8 @@ import styles from './index.module.scss';
 import { DocFooter } from '../../components/DocFooter/index';
 import { Aside } from '../../components/Aside/index';
 
+console.log(styles, 'sssssss');
+
 export function DocLayout() {
   const { siteData, toc } = usePageData();
   const sidebarData = siteData.themeConfig?.sidebar || {};
@@ -28,7 +30,7 @@ export function DocLayout() {
           <DocFooter />
         </div>
         <div className={styles.asideContainer}>
-          <Aside headers={toc} __island />
+          <Aside aa="1" headers={toc} __island />
         </div>
       </div>
     </div>

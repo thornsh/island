@@ -29,9 +29,9 @@ export function pluginConfig(
     },
     configureServer(server) {
       const publicDir = path.join(config.root, 'public');
-      if (fs.pathExistsSync(publicDir)) {
-        server.middlewares.use(sirv(publicDir));
-      }
+      // if (fs.pathExistsSync(publicDir)) {
+      server.middlewares.use(sirv(publicDir));
+      // }
     },
     resolveId(id) {
       if (id === SITE_DATA_ID) {
