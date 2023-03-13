@@ -7605,7 +7605,7 @@ var m$1 = reactDomExports;
   createRoot = m$1.createRoot;
   m$1.hydrateRoot;
 }
-const siteData = { "title": "1234", "description": "SSG Framework", "themeConfig": {}, "vite": {} };
+const siteData = { "title": "1234", "description": "SSG Framework", "themeConfig": { "nav": [{ "text": "主页", "link": "/" }, { "text": "指南", "link": "/guide/" }], "sidebar": { "/guide/": [{ "text": "教程", "items": [{ "text": "快速上手", "link": "/guide/a" }, { "text": "如何安装", "link": "/guide/b" }, { "text": "注意事项", "link": "/guide/c" }] }] } }, "vite": {} };
 /**
  * @remix-run/router v1.3.3
  *
@@ -7616,8 +7616,8 @@ const siteData = { "title": "1234", "description": "SSG Framework", "themeConfig
  *
  * @license MIT
  */
-function _extends$3() {
-  _extends$3 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$2() {
+  _extends$2 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -7628,7 +7628,7 @@ function _extends$3() {
     }
     return target;
   };
-  return _extends$3.apply(this, arguments);
+  return _extends$2.apply(this, arguments);
 }
 var Action;
 (function(Action2) {
@@ -7672,10 +7672,10 @@ function invariant$1(value, message) {
 function createKey() {
   return Math.random().toString(36).substr(2, 8);
 }
-function getHistoryState(location, index) {
+function getHistoryState(location2, index) {
   return {
-    usr: location.state,
-    key: location.key,
+    usr: location2.state,
+    key: location2.key,
     idx: index
   };
 }
@@ -7683,7 +7683,7 @@ function createLocation(current, to, state, key) {
   if (state === void 0) {
     state = null;
   }
-  let location = _extends$3({
+  let location2 = _extends$2({
     pathname: typeof current === "string" ? current : current.pathname,
     search: "",
     hash: ""
@@ -7695,7 +7695,7 @@ function createLocation(current, to, state, key) {
     // keep as is for the time being and just let any incoming keys take precedence
     key: to && to.key || key || createKey()
   });
-  return location;
+  return location2;
 }
 function createPath(_ref) {
   let {
@@ -7742,7 +7742,7 @@ function getUrlBasedHistory(getLocation, createHref, validateLocation, options) 
   let index = getIndex();
   if (index == null) {
     index = 0;
-    globalHistory.replaceState(_extends$3({}, globalHistory.state, {
+    globalHistory.replaceState(_extends$2({}, globalHistory.state, {
       idx: index
     }), "");
   }
@@ -7767,12 +7767,12 @@ function getUrlBasedHistory(getLocation, createHref, validateLocation, options) 
   }
   function push(to, state) {
     action = Action.Push;
-    let location = createLocation(history.location, to, state);
+    let location2 = createLocation(history.location, to, state);
     if (validateLocation)
-      validateLocation(location, to);
+      validateLocation(location2, to);
     index = getIndex() + 1;
-    let historyState = getHistoryState(location, index);
-    let url = history.createHref(location);
+    let historyState = getHistoryState(location2, index);
+    let url = history.createHref(location2);
     try {
       globalHistory.pushState(historyState, "", url);
     } catch (error) {
@@ -7788,12 +7788,12 @@ function getUrlBasedHistory(getLocation, createHref, validateLocation, options) 
   }
   function replace(to, state) {
     action = Action.Replace;
-    let location = createLocation(history.location, to, state);
+    let location2 = createLocation(history.location, to, state);
     if (validateLocation)
-      validateLocation(location, to);
+      validateLocation(location2, to);
     index = getIndex();
-    let historyState = getHistoryState(location, index);
-    let url = history.createHref(location);
+    let historyState = getHistoryState(location2, index);
+    let url = history.createHref(location2);
     globalHistory.replaceState(historyState, "", url);
     if (v5Compat && listener) {
       listener({
@@ -7804,10 +7804,10 @@ function getUrlBasedHistory(getLocation, createHref, validateLocation, options) 
     }
   }
   function createURL(to) {
-    let base = window2.location.origin !== "null" ? window2.location.origin : window2.location.href;
+    let base2 = window2.location.origin !== "null" ? window2.location.origin : window2.location.href;
     let href = typeof to === "string" ? to : createPath(to);
-    invariant$1(base, "No window.location.(origin|href) available to create URL for href: " + href);
-    return new URL(href, base);
+    invariant$1(base2, "No window.location.(origin|href) available to create URL for href: " + href);
+    return new URL(href, base2);
   }
   let history = {
     get action() {
@@ -7858,8 +7858,8 @@ function matchRoutes(routes2, locationArg, basename) {
   if (basename === void 0) {
     basename = "/";
   }
-  let location = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
-  let pathname = stripBasename(location.pathname || "/", basename);
+  let location2 = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+  let pathname = stripBasename(location2.pathname || "/", basename);
   if (pathname == null) {
     return null;
   }
@@ -8113,83 +8113,8 @@ function warning(cond, message) {
     }
   }
 }
-function resolvePath(to, fromPathname) {
-  if (fromPathname === void 0) {
-    fromPathname = "/";
-  }
-  let {
-    pathname: toPathname,
-    search = "",
-    hash = ""
-  } = typeof to === "string" ? parsePath(to) : to;
-  let pathname = toPathname ? toPathname.startsWith("/") ? toPathname : resolvePathname(toPathname, fromPathname) : fromPathname;
-  return {
-    pathname,
-    search: normalizeSearch(search),
-    hash: normalizeHash(hash)
-  };
-}
-function resolvePathname(relativePath, fromPathname) {
-  let segments = fromPathname.replace(/\/+$/, "").split("/");
-  let relativeSegments = relativePath.split("/");
-  relativeSegments.forEach((segment) => {
-    if (segment === "..") {
-      if (segments.length > 1)
-        segments.pop();
-    } else if (segment !== ".") {
-      segments.push(segment);
-    }
-  });
-  return segments.length > 1 ? segments.join("/") : "/";
-}
-function getInvalidPathError(char, field, dest, path) {
-  return "Cannot include a '" + char + "' character in a manually specified " + ("`to." + field + "` field [" + JSON.stringify(path) + "].  Please separate it out to the ") + ("`to." + dest + "` field. Alternatively you may provide the full path as ") + 'a string in <Link to="..."> and the router will parse it for you.';
-}
-function getPathContributingMatches(matches) {
-  return matches.filter((match, index) => index === 0 || match.route.path && match.route.path.length > 0);
-}
-function resolveTo(toArg, routePathnames, locationPathname, isPathRelative) {
-  if (isPathRelative === void 0) {
-    isPathRelative = false;
-  }
-  let to;
-  if (typeof toArg === "string") {
-    to = parsePath(toArg);
-  } else {
-    to = _extends$3({}, toArg);
-    invariant$1(!to.pathname || !to.pathname.includes("?"), getInvalidPathError("?", "pathname", "search", to));
-    invariant$1(!to.pathname || !to.pathname.includes("#"), getInvalidPathError("#", "pathname", "hash", to));
-    invariant$1(!to.search || !to.search.includes("#"), getInvalidPathError("#", "search", "hash", to));
-  }
-  let isEmptyPath = toArg === "" || to.pathname === "";
-  let toPathname = isEmptyPath ? "/" : to.pathname;
-  let from;
-  if (isPathRelative || toPathname == null) {
-    from = locationPathname;
-  } else {
-    let routePathnameIndex = routePathnames.length - 1;
-    if (toPathname.startsWith("..")) {
-      let toSegments = toPathname.split("/");
-      while (toSegments[0] === "..") {
-        toSegments.shift();
-        routePathnameIndex -= 1;
-      }
-      to.pathname = toSegments.join("/");
-    }
-    from = routePathnameIndex >= 0 ? routePathnames[routePathnameIndex] : "/";
-  }
-  let path = resolvePath(to, from);
-  let hasExplicitTrailingSlash = toPathname && toPathname !== "/" && toPathname.endsWith("/");
-  let hasCurrentTrailingSlash = (isEmptyPath || toPathname === ".") && locationPathname.endsWith("/");
-  if (!path.pathname.endsWith("/") && (hasExplicitTrailingSlash || hasCurrentTrailingSlash)) {
-    path.pathname += "/";
-  }
-  return path;
-}
 const joinPaths = (paths) => paths.join("/").replace(/\/\/+/g, "/");
 const normalizePathname = (pathname) => pathname.replace(/\/+$/, "").replace(/^\/*/, "/");
-const normalizeSearch = (search) => !search || search === "?" ? "" : search.startsWith("?") ? search : "?" + search;
-const normalizeHash = (hash) => !hash || hash === "#" ? "" : hash.startsWith("#") ? hash : "#" + hash;
 function isRouteErrorResponse(error) {
   return error != null && typeof error.status === "number" && typeof error.statusText === "string" && typeof error.internal === "boolean" && "data" in error;
 }
@@ -8205,8 +8130,8 @@ const validMutationMethodsArr = ["post", "put", "patch", "delete"];
  *
  * @license MIT
  */
-function _extends$2() {
-  _extends$2 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1() {
+  _extends$1 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -8217,7 +8142,7 @@ function _extends$2() {
     }
     return target;
   };
-  return _extends$2.apply(this, arguments);
+  return _extends$1.apply(this, arguments);
 }
 function isPolyfill(x2, y2) {
   return x2 === y2 && (x2 !== 0 || 1 / x2 === 1 / y2) || x2 !== x2 && y2 !== y2;
@@ -8292,86 +8217,12 @@ const RouteContext = /* @__PURE__ */ reactExports.createContext({
   matches: []
 });
 const RouteErrorContext = /* @__PURE__ */ reactExports.createContext(null);
-function useHref(to, _temp) {
-  let {
-    relative
-  } = _temp === void 0 ? {} : _temp;
-  !useInRouterContext() ? invariant$1(false) : void 0;
-  let {
-    basename,
-    navigator: navigator2
-  } = reactExports.useContext(NavigationContext);
-  let {
-    hash,
-    pathname,
-    search
-  } = useResolvedPath(to, {
-    relative
-  });
-  let joinedPathname = pathname;
-  if (basename !== "/") {
-    joinedPathname = pathname === "/" ? basename : joinPaths([basename, pathname]);
-  }
-  return navigator2.createHref({
-    pathname: joinedPathname,
-    search,
-    hash
-  });
-}
 function useInRouterContext() {
   return reactExports.useContext(LocationContext) != null;
 }
 function useLocation() {
   !useInRouterContext() ? invariant$1(false) : void 0;
   return reactExports.useContext(LocationContext).location;
-}
-function useNavigate() {
-  !useInRouterContext() ? invariant$1(false) : void 0;
-  let {
-    basename,
-    navigator: navigator2
-  } = reactExports.useContext(NavigationContext);
-  let {
-    matches
-  } = reactExports.useContext(RouteContext);
-  let {
-    pathname: locationPathname
-  } = useLocation();
-  let routePathnamesJson = JSON.stringify(getPathContributingMatches(matches).map((match) => match.pathnameBase));
-  let activeRef = reactExports.useRef(false);
-  reactExports.useEffect(() => {
-    activeRef.current = true;
-  });
-  let navigate = reactExports.useCallback(function(to, options) {
-    if (options === void 0) {
-      options = {};
-    }
-    if (!activeRef.current)
-      return;
-    if (typeof to === "number") {
-      navigator2.go(to);
-      return;
-    }
-    let path = resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, options.relative === "path");
-    if (basename !== "/") {
-      path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
-    }
-    (!!options.replace ? navigator2.replace : navigator2.push)(path, options.state, options);
-  }, [basename, navigator2, routePathnamesJson, locationPathname]);
-  return navigate;
-}
-function useResolvedPath(to, _temp2) {
-  let {
-    relative
-  } = _temp2 === void 0 ? {} : _temp2;
-  let {
-    matches
-  } = reactExports.useContext(RouteContext);
-  let {
-    pathname: locationPathname
-  } = useLocation();
-  let routePathnamesJson = JSON.stringify(getPathContributingMatches(matches).map((match) => match.pathnameBase));
-  return reactExports.useMemo(() => resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to, routePathnamesJson, locationPathname, relative]);
 }
 function useRoutes(routes2, locationArg) {
   !useInRouterContext() ? invariant$1(false) : void 0;
@@ -8388,16 +8239,16 @@ function useRoutes(routes2, locationArg) {
   let parentPathnameBase = routeMatch ? routeMatch.pathnameBase : "/";
   routeMatch && routeMatch.route;
   let locationFromContext = useLocation();
-  let location;
+  let location2;
   if (locationArg) {
     var _parsedLocationArg$pa;
     let parsedLocationArg = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
     !(parentPathnameBase === "/" || ((_parsedLocationArg$pa = parsedLocationArg.pathname) == null ? void 0 : _parsedLocationArg$pa.startsWith(parentPathnameBase))) ? invariant$1(false) : void 0;
-    location = parsedLocationArg;
+    location2 = parsedLocationArg;
   } else {
-    location = locationFromContext;
+    location2 = locationFromContext;
   }
-  let pathname = location.pathname || "/";
+  let pathname = location2.pathname || "/";
   let remainingPathname = parentPathnameBase === "/" ? pathname : pathname.slice(parentPathnameBase.length) || "/";
   let matches = matchRoutes(routes2, {
     pathname: remainingPathname
@@ -8418,13 +8269,13 @@ function useRoutes(routes2, locationArg) {
   if (locationArg && renderedMatches) {
     return /* @__PURE__ */ reactExports.createElement(LocationContext.Provider, {
       value: {
-        location: _extends$2({
+        location: _extends$1({
           pathname: "/",
           search: "",
           hash: "",
           state: null,
           key: "default"
-        }, location),
+        }, location2),
         navigationType: Action.Pop
       }
     }, renderedMatches);
@@ -8608,7 +8459,7 @@ function Router(_ref4) {
     state = null,
     key = "default"
   } = locationProp;
-  let location = reactExports.useMemo(() => {
+  let location2 = reactExports.useMemo(() => {
     let trailingPathname = stripBasename(pathname, basename);
     if (trailingPathname == null) {
       return null;
@@ -8621,7 +8472,7 @@ function Router(_ref4) {
       key
     };
   }, [basename, pathname, search, hash, state, key]);
-  if (location == null) {
+  if (location2 == null) {
     return null;
   }
   return /* @__PURE__ */ reactExports.createElement(NavigationContext.Provider, {
@@ -8629,7 +8480,7 @@ function Router(_ref4) {
   }, /* @__PURE__ */ reactExports.createElement(LocationContext.Provider, {
     children,
     value: {
-      location,
+      location: location2,
       navigationType
     }
   }));
@@ -8652,43 +8503,6 @@ new Promise(() => {
  *
  * @license MIT
  */
-function _extends$1() {
-  _extends$1 = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1.apply(this, arguments);
-}
-function _objectWithoutPropertiesLoose$1(source, excluded) {
-  if (source == null)
-    return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0)
-      continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-function isModifiedEvent(event) {
-  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-}
-function shouldProcessLinkClick(event, target) {
-  return event.button === 0 && // Ignore everything but left clicks
-  (!target || target === "_self") && // Let browser handle "target=_blank" etc.
-  !isModifiedEvent(event);
-}
-const _excluded = ["onClick", "relative", "reloadDocument", "replace", "state", "target", "to", "preventScrollReset"];
 function BrowserRouter(_ref) {
   let {
     basename,
@@ -8716,64 +8530,6 @@ function BrowserRouter(_ref) {
     navigator: history
   });
 }
-const isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
-const ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
-const Link = /* @__PURE__ */ reactExports.forwardRef(function LinkWithRef(_ref4, ref) {
-  let {
-    onClick,
-    relative,
-    reloadDocument,
-    replace,
-    state,
-    target,
-    to,
-    preventScrollReset
-  } = _ref4, rest = _objectWithoutPropertiesLoose$1(_ref4, _excluded);
-  let {
-    basename
-  } = reactExports.useContext(NavigationContext);
-  let absoluteHref;
-  let isExternal = false;
-  if (typeof to === "string" && ABSOLUTE_URL_REGEX.test(to)) {
-    absoluteHref = to;
-    if (isBrowser) {
-      let currentUrl = new URL(window.location.href);
-      let targetUrl = to.startsWith("//") ? new URL(currentUrl.protocol + to) : new URL(to);
-      let path = stripBasename(targetUrl.pathname, basename);
-      if (targetUrl.origin === currentUrl.origin && path != null) {
-        to = path + targetUrl.search + targetUrl.hash;
-      } else {
-        isExternal = true;
-      }
-    }
-  }
-  let href = useHref(to, {
-    relative
-  });
-  let internalOnClick = useLinkClickHandler(to, {
-    replace,
-    state,
-    target,
-    preventScrollReset,
-    relative
-  });
-  function handleClick(event) {
-    if (onClick)
-      onClick(event);
-    if (!event.defaultPrevented) {
-      internalOnClick(event);
-    }
-  }
-  return (
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    /* @__PURE__ */ reactExports.createElement("a", _extends$1({}, rest, {
-      href: absoluteHref || href,
-      onClick: isExternal || reloadDocument ? onClick : handleClick,
-      ref,
-      target
-    }))
-  );
-});
 var DataRouterHook;
 (function(DataRouterHook2) {
   DataRouterHook2["UseScrollRestoration"] = "useScrollRestoration";
@@ -8785,32 +8541,7 @@ var DataRouterStateHook;
   DataRouterStateHook2["UseFetchers"] = "useFetchers";
   DataRouterStateHook2["UseScrollRestoration"] = "useScrollRestoration";
 })(DataRouterStateHook || (DataRouterStateHook = {}));
-function useLinkClickHandler(to, _temp) {
-  let {
-    target,
-    replace: replaceProp,
-    state,
-    preventScrollReset,
-    relative
-  } = _temp === void 0 ? {} : _temp;
-  let navigate = useNavigate();
-  let location = useLocation();
-  let path = useResolvedPath(to, {
-    relative
-  });
-  return reactExports.useCallback((event) => {
-    if (shouldProcessLinkClick(event, target)) {
-      event.preventDefault();
-      let replace = replaceProp !== void 0 ? replaceProp : createPath(location) === createPath(path);
-      navigate(to, {
-        replace,
-        state,
-        preventScrollReset,
-        relative
-      });
-    }
-  }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative]);
-}
+const __uno = "";
 const scriptRel = "modulepreload";
 const assetsURL = function(dep) {
   return "/" + dep;
@@ -8820,7 +8551,7 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   if (!deps || deps.length === 0) {
     return baseModule();
   }
-  const links = document.getElementsByTagName("link");
+  const links2 = document.getElementsByTagName("link");
   return Promise.all(deps.map((dep) => {
     dep = assetsURL(dep);
     if (dep in seen)
@@ -8830,27 +8561,27 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     const cssSelector = isCss ? '[rel="stylesheet"]' : "";
     const isBaseRelative = !!importerUrl;
     if (isBaseRelative) {
-      for (let i = links.length - 1; i >= 0; i--) {
-        const link2 = links[i];
-        if (link2.href === dep && (!isCss || link2.rel === "stylesheet")) {
+      for (let i = links2.length - 1; i >= 0; i--) {
+        const link3 = links2[i];
+        if (link3.href === dep && (!isCss || link3.rel === "stylesheet")) {
           return;
         }
       }
     } else if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
       return;
     }
-    const link = document.createElement("link");
-    link.rel = isCss ? "stylesheet" : scriptRel;
+    const link2 = document.createElement("link");
+    link2.rel = isCss ? "stylesheet" : scriptRel;
     if (!isCss) {
-      link.as = "script";
-      link.crossOrigin = "";
+      link2.as = "script";
+      link2.crossOrigin = "";
     }
-    link.href = dep;
-    document.head.appendChild(link);
+    link2.href = dep;
+    document.head.appendChild(link2);
     if (isCss) {
       return new Promise((res, rej) => {
-        link.addEventListener("load", res);
-        link.addEventListener("error", () => rej(new Error(`Unable to preload CSS for ${dep}`)));
+        link2.addEventListener("load", res);
+        link2.addEventListener("error", () => rej(new Error(`Unable to preload CSS for ${dep}`)));
       });
     }
   })).then(() => baseModule());
@@ -9396,47 +9127,568 @@ var loadable$2 = loadable;
 loadable$2.lib = loadable$1;
 var lazy$2 = lazy;
 lazy$2.lib = lazy$1;
-const Route0 = loadable$2(() => __vitePreload(() => import("./Counter-cefaf07a.js"), true ? [] : void 0));
-const Route1 = loadable$2(() => __vitePreload(() => import("./b-8fb7ca4c.js"), true ? [] : void 0));
-const Route2 = loadable$2(() => __vitePreload(() => import("./a-b9205e5d.js"), true ? [] : void 0));
-const Route3 = loadable$2(() => __vitePreload(() => import("./index-34fe0db6.js"), true ? [] : void 0));
-const Route4 = loadable$2(() => __vitePreload(() => import("./index-847d9aa6.js"), true ? ["assets/index-847d9aa6.js","assets/Counter-cefaf07a.js"] : void 0));
+const Route0 = loadable$2(() => __vitePreload(() => import("./Counter-0378f1d7.js"), true ? [] : void 0));
+const Route1 = loadable$2(() => __vitePreload(() => import("./b-9c146b83.js"), true ? [] : void 0));
+const Route2 = loadable$2(() => __vitePreload(() => import("./a-0bb3cd05.js"), true ? [] : void 0));
+const Route3 = loadable$2(() => __vitePreload(() => import("./b-1fb0c362.js"), true ? [] : void 0));
+const Route4 = loadable$2(() => __vitePreload(() => import("./c-b801f5a4.js"), true ? [] : void 0));
+const Route5 = loadable$2(() => __vitePreload(() => import("./index-a5ba4477.js"), true ? [] : void 0));
+const Route6 = loadable$2(() => __vitePreload(() => import("./index-167f374f.js"), true ? ["assets/index-167f374f.js","assets/Counter-0378f1d7.js"] : void 0));
 const routes = [
-  { path: "/Counter", element: React.createElement(Route0) },
-  { path: "/b", element: React.createElement(Route1) },
-  { path: "/guide/a", element: React.createElement(Route2) },
-  { path: "/guide/", element: React.createElement(Route3) },
-  { path: "/", element: React.createElement(Route4) }
+  { path: "/Counter", element: React.createElement(Route0), preload: () => __vitePreload(() => import("./Counter-0378f1d7.js"), true ? [] : void 0) },
+  { path: "/b", element: React.createElement(Route1), preload: () => __vitePreload(() => import("./b-9c146b83.js"), true ? [] : void 0) },
+  { path: "/guide/a", element: React.createElement(Route2), preload: () => __vitePreload(() => import("./a-0bb3cd05.js"), true ? [] : void 0) },
+  { path: "/guide/b", element: React.createElement(Route3), preload: () => __vitePreload(() => import("./b-1fb0c362.js"), true ? [] : void 0) },
+  { path: "/guide/c", element: React.createElement(Route4), preload: () => __vitePreload(() => import("./c-b801f5a4.js"), true ? [] : void 0) },
+  { path: "/guide/", element: React.createElement(Route5), preload: () => __vitePreload(() => import("./index-a5ba4477.js"), true ? [] : void 0) },
+  { path: "/", element: React.createElement(Route6), preload: () => __vitePreload(() => import("./index-167f374f.js"), true ? ["assets/index-167f374f.js","assets/Counter-0378f1d7.js"] : void 0) }
 ];
 const Content = () => {
   const routeElement = useRoutes(routes);
   return routeElement;
 };
+const DataContext = reactExports.createContext({});
+const usePageData = () => {
+  return reactExports.useContext(DataContext);
+};
+const base = "";
+const vars = "";
+const link$1 = "_link_158tj_1";
+const socialLinkIcon = "_social-link-icon_158tj_12";
+const nav = "_nav_158tj_22";
+const styles$7 = {
+  link: link$1,
+  socialLinkIcon,
+  nav
+};
+const check = "_check_rbkha_17";
+const icon = "_icon_rbkha_34";
+const dark = "_dark_rbkha_29";
+const sun = "_sun_rbkha_57";
+const moon = "_moon_rbkha_61";
+const styles$6 = {
+  "switch": "_switch_rbkha_1",
+  check,
+  icon,
+  dark,
+  sun,
+  moon
+};
+const APPEARANCE_KEY = "appearance";
+const setClassList = (isDark = false) => {
+  const classList = document.documentElement.classList;
+  if (isDark) {
+    classList.add("dark");
+  } else {
+    classList.remove("dark");
+  }
+};
+const updateAppearance = () => {
+  const userPreference = localStorage.getItem(APPEARANCE_KEY);
+  setClassList(userPreference === "dark");
+};
+if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+  updateAppearance();
+  window.addEventListener("storage", updateAppearance);
+}
+function toggle() {
+  const classList = document.documentElement.classList;
+  if (classList.contains("dark")) {
+    setClassList(false);
+    localStorage.setItem(APPEARANCE_KEY, "light");
+  } else {
+    setClassList(true);
+    localStorage.setItem(APPEARANCE_KEY, "dark");
+  }
+}
+function Switch(props) {
+  return /* @__PURE__ */ jsx(
+    "button",
+    {
+      className: `${styles$6.switch} ${props.className}`,
+      id: props.id ?? "",
+      type: "button",
+      role: "switch",
+      ...props.onClick ? { onClick: props.onClick } : {},
+      children: /* @__PURE__ */ jsx("span", { className: styles$6.check, children: /* @__PURE__ */ jsx("span", { className: styles$6.icon, children: props.children }) })
+    }
+  );
+}
+function SwitchAppearance() {
+  return /* @__PURE__ */ jsxs(Switch, { onClick: toggle, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$6.sun, children: /* @__PURE__ */ jsx("div", { className: "i-carbon-sun", w: "full", h: "full" }) }),
+    /* @__PURE__ */ jsx("div", { className: styles$6.moon, children: /* @__PURE__ */ jsx("div", { className: "i-carbon-moon", w: "full", h: "full" }) })
+  ] });
+}
+function MenuItem(item) {
+  return /* @__PURE__ */ jsx("div", { className: "text-sm font-medium mx-3", children: /* @__PURE__ */ jsx("a", { href: item.link, className: styles$7.link, children: item.text }) });
+}
+function Nav() {
+  const { siteData: siteData2 } = usePageData();
+  const nav2 = siteData2.themeConfig.nav || [];
+  return /* @__PURE__ */ jsx("header", { fixed: "~", pos: "t-0 l-0", w: "full", z: "10", children: /* @__PURE__ */ jsxs(
+    "div",
+    {
+      flex: "~",
+      items: "center",
+      justify: "between",
+      className: `h-14 divider-bottom ${styles$7.nav}`,
+      children: [
+        /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(
+          "a",
+          {
+            href: "/",
+            hover: "opacity-60",
+            className: "w-full h-full text-1rem font-semibold flex items-center",
+            children: "Island.js"
+          }
+        ) }),
+        /* @__PURE__ */ jsxs("div", { flex: "~", children: [
+          /* @__PURE__ */ jsx("div", { flex: "~", children: nav2.map((item) => /* @__PURE__ */ reactExports.createElement(MenuItem, { ...item, key: item.text })) }),
+          /* @__PURE__ */ jsx("div", { before: "menu-item-before", flex: "~", children: /* @__PURE__ */ jsx(SwitchAppearance, {}) }),
+          /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: styles$7.socialLinkIcon,
+              ml: "2",
+              before: "menu-item-before",
+              children: /* @__PURE__ */ jsx("a", { href: "/", children: /* @__PURE__ */ jsx("div", { className: "i-carbon-logo-github w-5 h-5 fill-current" }) })
+            }
+          )
+        ] })
+      ]
+    }
+  ) });
+}
+const clip = "_clip_zensi_1";
+const styles$5 = {
+  clip
+};
+const link = "_link_r3fql_1";
+const styles$4 = {
+  link
+};
+const EXTERNAL_URL_RE = /^https?/;
+function Link(props) {
+  const { href = "/", children, className = "" } = props;
+  const isExternal = EXTERNAL_URL_RE.test(href);
+  const target = isExternal ? "_blank" : "";
+  const rel = isExternal ? "noopener noreferrer" : void 0;
+  return /* @__PURE__ */ jsx(
+    "a",
+    {
+      href,
+      target,
+      rel,
+      className: `${styles$4.link} ${className}`,
+      children
+    }
+  );
+}
+const button = "_button_togsy_1";
+const medium = "_medium_togsy_14";
+const big = "_big_togsy_21";
+const brand = "_brand_togsy_28";
+const alt = "_alt_togsy_47";
+const styles$3 = {
+  button,
+  medium,
+  big,
+  brand,
+  alt
+};
+function Button(props) {
+  const {
+    theme = "brand",
+    size = "big",
+    href = "/",
+    external = false,
+    className = ""
+  } = props;
+  let type = null;
+  if (props.type === "button") {
+    type = "button";
+  } else if (props.type === "a") {
+    type = external ? "a" : Link;
+  }
+  return React.createElement(
+    type ?? "a",
+    {
+      className: `${styles$3.button} ${styles$3[theme]} ${styles$3[size]} ${className}`,
+      href
+    },
+    props.text
+  );
+}
+function HomeHero(props) {
+  const { hero } = props;
+  return /* @__PURE__ */ jsx("div", { m: "auto", p: "t-20 x-16 b-16", children: /* @__PURE__ */ jsxs("div", { flex: "~", className: "max-w-1152px", m: "auto", children: [
+    /* @__PURE__ */ jsxs("div", { text: "left", flex: "~ col", className: "max-w-592px", children: [
+      /* @__PURE__ */ jsx("h1", { font: "bold", text: "6xl", className: "max-w-576px", children: /* @__PURE__ */ jsx("span", { className: styles$5.clip, children: hero.name }) }),
+      /* @__PURE__ */ jsx("p", { text: "6xl", font: "bold", className: "max-w-576px", children: hero.text }),
+      /* @__PURE__ */ jsx(
+        "p",
+        {
+          p: "t-3",
+          text: "2xl text-2",
+          font: "medium",
+          className: "whitespace-pre-wrap max-w-576px",
+          children: hero.tagline
+        }
+      ),
+      /* @__PURE__ */ jsx("div", { flex: "~ wrap", justify: "start", p: "t-8", children: hero.actions.map((action) => /* @__PURE__ */ jsx("div", { p: "1", children: /* @__PURE__ */ jsx(
+        Button,
+        {
+          type: "a",
+          text: action.text,
+          href: action.link,
+          theme: action.theme
+        }
+      ) }, action.link)) })
+    ] }),
+    hero.image && /* @__PURE__ */ jsx("div", { w: "max-96", h: "max-96", flex: "center", m: "auto", children: /* @__PURE__ */ jsx("img", { src: hero.image.src, alt: hero.image.alt }) })
+  ] }) });
+}
+function HomeFeature(props) {
+  return /* @__PURE__ */ jsx("div", { className: "max-w-1152px", m: "auto", flex: "~ wrap", justify: "between", children: props.features.map((feature) => {
+    const { icon: icon2, title: title2, details } = feature;
+    return /* @__PURE__ */ jsx("div", { border: "rounded-md", p: "r-4 b-4", w: "1/3", children: /* @__PURE__ */ jsxs(
+      "article",
+      {
+        bg: "bg-soft",
+        border: "~ bg-soft solid rounded-xl",
+        p: "6",
+        h: "full",
+        children: [
+          /* @__PURE__ */ jsx(
+            "div",
+            {
+              bg: "gray-light-4 dark:bg-white",
+              border: "rounded-md",
+              className: "mb-5 w-12 h-12 text-3xl flex-center",
+              children: icon2
+            }
+          ),
+          /* @__PURE__ */ jsx("h2", { font: "bold", children: title2 }),
+          /* @__PURE__ */ jsx("p", { text: "sm text-2", font: "medium", className: "pt-2 leading-6", children: details })
+        ]
+      }
+    ) }, title2);
+  }) });
+}
+function HomeLayout() {
+  const { frontmatter } = usePageData();
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx(HomeHero, { hero: frontmatter.hero }),
+    /* @__PURE__ */ jsx(HomeFeature, { features: frontmatter.features })
+  ] });
+}
+const sidebar = "_sidebar_16h0y_1";
+const styles$2 = {
+  sidebar
+};
+function Sidebar(props) {
+  const { sidebarData, pathname } = props;
+  const renderGroupItem = (item) => {
+    const active = item.link === pathname;
+    return /* @__PURE__ */ jsx("div", { ml: "5", children: /* @__PURE__ */ jsx(
+      "div",
+      {
+        p: "1",
+        block: "~",
+        text: "sm",
+        "font-medium": "~",
+        className: `${active ? "text-brand" : "text-text-2"}`,
+        children: /* @__PURE__ */ jsx(Link, { href: item.link, children: item.text })
+      }
+    ) });
+  };
+  const renderGroup = (item) => {
+    var _a;
+    return /* @__PURE__ */ jsxs("section", { block: "~", "not-first": "divider-top mt-4", children: [
+      /* @__PURE__ */ jsx("div", { flex: "~", justify: "between", items: "center", children: /* @__PURE__ */ jsx("h2", { m: "t-3 b-2", text: "1rem text-1", font: "bold", children: item.text }) }),
+      /* @__PURE__ */ jsx("div", { mb: "1", children: (_a = item.items) == null ? void 0 : _a.map((item2) => /* @__PURE__ */ jsx("div", { children: renderGroupItem(item2) }, item2.link)) })
+    ] }, item.text);
+  };
+  return /* @__PURE__ */ jsx("aside", { className: styles$2.sidebar, children: /* @__PURE__ */ jsx("nav", { children: sidebarData.map(renderGroup) }) });
+}
+const content = "_content_1d34c_1";
+const docContent = "_doc-content_1d34c_8";
+const asideContainer = "_aside-container_1d34c_14";
+const styles$1 = {
+  content,
+  docContent,
+  asideContainer
+};
+const prev = "_prev_6xv5j_1";
+const next = "_next_6xv5j_2";
+const pagerLink = "_pager-link_6xv5j_6";
+const title = "_title_6xv5j_20";
+const desc = "_desc_6xv5j_29";
+const styles = {
+  prev,
+  next,
+  pagerLink,
+  title,
+  desc
+};
+function usePrevNextPage() {
+  var _a;
+  const { pathname } = useLocation();
+  const { siteData: siteData2 } = usePageData();
+  const sidebar2 = ((_a = siteData2.themeConfig) == null ? void 0 : _a.sidebar) || {};
+  const flattenTitles = [];
+  Object.keys(sidebar2).forEach((key) => {
+    const groups = sidebar2[key] || [];
+    groups.forEach((group) => {
+      group.items.forEach((item) => {
+        flattenTitles.push(item);
+      });
+    });
+  });
+  const pageIndex = flattenTitles.findIndex((item) => item.link === pathname);
+  const prevPage = flattenTitles[pageIndex - 1] || null;
+  const nextPage = flattenTitles[pageIndex + 1] || null;
+  return {
+    prevPage,
+    nextPage
+  };
+}
+function DocFooter() {
+  const { prevPage, nextPage } = usePrevNextPage();
+  return /* @__PURE__ */ jsx("footer", { mt: "8", children: /* @__PURE__ */ jsxs("div", { flex: "~", gap: "2", "divider-top": "~", pt: "6", children: [
+    /* @__PURE__ */ jsx("div", { flex: "~ col", className: styles.prev, children: prevPage && /* @__PURE__ */ jsxs("a", { href: prevPage.link, className: styles.pagerLink, children: [
+      /* @__PURE__ */ jsx("span", { className: styles.desc, children: "上一页" }),
+      /* @__PURE__ */ jsx("span", { className: styles.title, children: prevPage.text })
+    ] }) }),
+    /* @__PURE__ */ jsx("div", { flex: "~ col", className: styles.next, children: nextPage && /* @__PURE__ */ jsxs(
+      "a",
+      {
+        href: nextPage.link,
+        className: `${styles.pagerLink} ${styles.next}`,
+        children: [
+          /* @__PURE__ */ jsx("span", { className: styles.desc, children: "下一页" }),
+          /* @__PURE__ */ jsx("span", { className: styles.title, children: nextPage.text })
+        ]
+      }
+    ) })
+  ] }) });
+}
+let links = [];
+const NAV_HEIGHT = 56;
+function bindingAsideScroll() {
+  const marker = document.getElementById("aside-marker");
+  const aside = document.getElementById("aside-container");
+  if (!aside) {
+    return;
+  }
+  const headers = Array.from((aside == null ? void 0 : aside.getElementsByTagName("a")) || []).map(
+    (item) => decodeURIComponent(item.hash)
+  );
+  const activate = (links2, index) => {
+    if (links2[index]) {
+      const id2 = links2[index].getAttribute("href");
+      const tocIndex = headers.findIndex((item) => item === id2);
+      const currentLink = aside == null ? void 0 : aside.querySelector(`a[href="#${id2.slice(1)}"]`);
+      if (currentLink) {
+        marker.style.top = `${33 + tocIndex * 28}px`;
+        marker.style.opacity = "1";
+      }
+    }
+  };
+  const setActiveLink = () => {
+    links = Array.from(
+      document.querySelectorAll(".island-doc .header-anchor")
+    ).filter((item) => {
+      var _a;
+      return ((_a = item.parentElement) == null ? void 0 : _a.tagName) !== "H1";
+    });
+    const isBottom = document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight;
+    if (isBottom) {
+      activate(links, links.length - 1);
+      return;
+    }
+    for (let i = 0; i < links.length; i++) {
+      const currentAnchor = links[i];
+      const nextAnchor = links[i + 1];
+      const scrollTop = Math.ceil(window.scrollY);
+      const currentAnchorTop = currentAnchor.parentElement.offsetTop - NAV_HEIGHT;
+      if (!nextAnchor) {
+        activate(links, i);
+        break;
+      }
+      if (i === 0 && scrollTop < currentAnchorTop || scrollTop == 0) {
+        activate(links, 0);
+        break;
+      }
+      const nextAnchorTop = nextAnchor.parentElement.offsetTop - NAV_HEIGHT;
+      if (scrollTop >= currentAnchorTop && scrollTop < nextAnchorTop) {
+        activate(links, i);
+        break;
+      }
+    }
+  };
+  window.addEventListener("scroll", setActiveLink);
+  return () => {
+    window.removeEventListener("scroll", setActiveLink);
+  };
+}
+function scrollToTarget(target, isSmooth) {
+  const targetPadding = parseInt(
+    window.getComputedStyle(target).paddingTop,
+    10
+  );
+  const targetTop = window.scrollY + target.getBoundingClientRect().top + targetPadding - NAV_HEIGHT;
+  window.scrollTo({
+    left: 0,
+    top: targetTop,
+    behavior: isSmooth ? "smooth" : "auto"
+  });
+}
+function useHeaders(initHeaders) {
+  const [headers, setHeaders] = reactExports.useState(initHeaders);
+  reactExports.useEffect(() => {
+  });
+  return headers;
+}
+function Aside(props) {
+  const { headers: rawHeaders = [] } = props;
+  const headers = useHeaders(rawHeaders);
+  const hasOutline = headers.length > 0;
+  const markerRef = reactExports.useRef(null);
+  console.log(headers, "--------");
+  const renderHeader = (header) => {
+    return /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
+      "a",
+      {
+        href: `#${header.id}`,
+        className: "block leading-7 text-text-2 hover:text-text-1",
+        transition: "color duration-300",
+        style: {
+          paddingLeft: (header.depth - 2) * 12
+        },
+        onClick: (e2) => {
+          e2.preventDefault();
+          const target = document.getElementById(header.id);
+          target && scrollToTarget(target, false);
+        },
+        children: header.text
+      }
+    ) }, header.id);
+  };
+  reactExports.useEffect(() => {
+    const unbinding = bindingAsideScroll();
+    return () => {
+      unbinding();
+    };
+  }, []);
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      flex: "~ col 1",
+      style: {
+        width: "var(--island-aside-width)"
+      },
+      children: /* @__PURE__ */ jsx("div", { children: hasOutline && /* @__PURE__ */ jsxs(
+        "div",
+        {
+          id: "aside-container",
+          className: "relative divider-left pl-4 text-13px font-medium",
+          children: [
+            /* @__PURE__ */ jsx(
+              "div",
+              {
+                ref: markerRef,
+                id: "aside-marker",
+                className: "absolute top-33px opacity-0 w-1px h-18px bg-brand",
+                style: {
+                  left: "-1px",
+                  transition: "top 0.25s cubic-bezier(0, 1, 0.5, 1), background-color 0.5s, opacity 0.25s"
+                }
+              }
+            ),
+            /* @__PURE__ */ jsx("div", { "leading-7": "~", text: "13px", font: "semibold", children: "ON THIS PAGE" }),
+            /* @__PURE__ */ jsx("nav", { children: /* @__PURE__ */ jsx("ul", { relative: "~", children: headers.map(renderHeader) }) })
+          ]
+        }
+      ) })
+    }
+  );
+}
+function DocLayout() {
+  var _a;
+  const { siteData: siteData2, toc } = usePageData();
+  const sidebarData = ((_a = siteData2.themeConfig) == null ? void 0 : _a.sidebar) || {};
+  const { pathname } = useLocation();
+  const matchedSidebarKey = Object.keys(sidebarData).find((key) => {
+    if (pathname.startsWith(key)) {
+      return true;
+    }
+  });
+  const matchedSidebar = sidebarData[matchedSidebarKey] || [];
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx(Sidebar, { sidebarData: matchedSidebar, pathname }),
+    /* @__PURE__ */ jsxs("div", { className: styles$1.content, flex: "~", children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$1.docContent, children: [
+        /* @__PURE__ */ jsx("div", { className: "island-doc", children: /* @__PURE__ */ jsx(Content, {}) }),
+        /* @__PURE__ */ jsx(DocFooter, {})
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: styles$1.asideContainer, children: /* @__PURE__ */ jsx(Aside, { headers: toc, __island: true }) })
+    ] })
+  ] });
+}
+const doc = "";
 function Layout() {
-  reactExports.useState(0);
-  const aa2 = () => {
-    const navigate = useNavigate();
-    navigate("/guide");
+  const pageData = usePageData();
+  console.log(pageData, "---------");
+  const { pageType } = pageData;
+  const getContent = () => {
+    if (pageType === "home") {
+      return /* @__PURE__ */ jsx(HomeLayout, {});
+    } else if (pageType === "doc") {
+      return /* @__PURE__ */ jsx(DocLayout, {});
+    } else {
+      return /* @__PURE__ */ jsx("div", { children: "404 页面" });
+    }
   };
   return /* @__PURE__ */ jsxs("div", { children: [
-    /* @__PURE__ */ jsx("h1", { children: "Common Content" }),
-    /* @__PURE__ */ jsx("h1", { children: "Doc Content" }),
-    /* @__PURE__ */ jsx(Content, {}),
-    /* @__PURE__ */ jsx("button", { onClick: aa2, children: "aaaa" }),
-    /* @__PURE__ */ jsx(Link, { to: "/guide", children: "bbbbbb" })
+    /* @__PURE__ */ jsx(Nav, {}),
+    /* @__PURE__ */ jsx("section", { style: { paddingTop: "var(--island-nav-height)" }, children: getContent() })
   ] });
 }
 function App() {
   return /* @__PURE__ */ jsx(Layout, {});
 }
-function renderInBrowser() {
+async function initPageData(routePath) {
+  var _a;
+  const matched = matchRoutes(routes, routePath);
+  if (matched) {
+    const moduleInfo = await matched[0].route.preload();
+    console.log(moduleInfo);
+    return {
+      pageType: ((_a = moduleInfo.frontmatter) == null ? void 0 : _a.pageType) ?? "doc",
+      siteData,
+      frontmatter: moduleInfo.frontmatter,
+      pagePath: routePath,
+      toc: moduleInfo.toc
+    };
+  }
+  return {
+    pageType: "404",
+    siteData,
+    pagePath: routePath,
+    frontmatter: {}
+  };
+}
+async function renderInBrowser() {
   const containerEl = document.getElementById("root");
   if (!containerEl) {
     throw new Error("#root element not found");
   }
   console.log(siteData);
+  const pageData = await initPageData(location.pathname);
   createRoot(containerEl).render(
-    /* @__PURE__ */ jsx(BrowserRouter, { children: /* @__PURE__ */ jsx(App, {}) })
+    /* @__PURE__ */ jsx(DataContext.Provider, { value: pageData, children: /* @__PURE__ */ jsx(BrowserRouter, { children: /* @__PURE__ */ jsx(App, {}) }) })
   );
 }
 renderInBrowser();

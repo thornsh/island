@@ -1,4 +1,4 @@
-import { r as reactExports, a as jsxs, j as jsx } from "./client-entry-42e6b572.js";
+import { r as reactExports, a as jsxs, j as jsx } from "./client-entry-c5ebc927.js";
 function Counter() {
   const [count, setCount] = reactExports.useState(0);
   return /* @__PURE__ */ jsxs("div", { children: [

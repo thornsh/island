@@ -17,11 +17,10 @@ interface ChildNode {
   children?: ChildNode[];
 }
 
-const slugger = new Slugger();
-
 export const remarkPluginToc: Plugin<[], Root> = () => {
   return (tree) => {
     const toc: TocItem[] = [];
+    const slugger = new Slugger();
 
     visit(tree, 'heading', (node) => {
       if (!node.depth || !node.children) {
